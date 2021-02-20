@@ -1,26 +1,27 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
+use \Detection\Mobile_Detect;
 
 /**
  * @license     MIT License https://github.com/serbanghita/Mobile-Detect/blob/master/LICENSE.txt
  * @link        http://mobiledetect.net
  */
-class BasicTest extends TestCase
+class MobileDetectTest extends TestCase
 {
     /**
      * @var Mobile_Detect
      */
-    protected $detect;
+    protected Mobile_Detect $detect;
+
+    public function setUp(): void
+    {
+        $this->detect = new Mobile_Detect;
+    }
 
     public function testClassExists()
     {
-        $this->assertTrue(class_exists('Mobile_Detect'));
-    }
-
-    public function setUp()
-    {
-        $this->detect = new Mobile_Detect;
+        $this->assertTrue(class_exists('\Detection\Mobile_Detect'));
     }
 
     public function testBasicMethods()
@@ -62,13 +63,12 @@ class BasicTest extends TestCase
         $this->assertTrue( $this->detect->isios() );
         $this->assertTrue( $this->detect->is('iphone') );
         $this->assertTrue( $this->detect->is('ios') );
-
     }
 
-    public function headersProvider()
+    public function headersProvider(): array
     {
-        return array(
-            array(array(
+        return [
+            [[
                 'SERVER_SOFTWARE'       => 'Apache/2.2.15 (Linux) Whatever/4.0 PHP/5.2.13',
                 'REQUEST_METHOD'        => 'POST',
                 'HTTP_HOST'             => 'home.ghita.org',
@@ -85,22 +85,22 @@ class BasicTest extends TestCase
                 'HTTP_CACHE_CONTROL'    => 'no-cache',
                 'REMOTE_ADDR'           => '11.22.33.44',
                 'REQUEST_TIME'          => '01-10-2012 07:57'
-            )),
-            array(array(
+            ]],
+            [[
                 'SERVER_SOFTWARE'       => 'Rogue software',
                 'REQUEST_METHOD'        => 'GET',
                 'REMOTE_ADDR'           => '8.8.8.8',
                 'REQUEST_TIME'          => '07-10-2013 23:56',
                 'HTTP_USER_AGENT'       => "garbage/1.0"
-            )),
-            array(array(
+            ]],
+            [[
                 'SERVER_SOFTWARE'       => 'Apache/1.3.17 (Linux) PHP/5.5.2',
                 'REQUEST_METHOD'        => 'HEAD',
                 'HTTP_USER_AGENT'       => 'Mozilla/5.0 (Linux; U; Android 1.5; en-us; ADR6200 Build/CUPCAKE) AppleWebKit/528.5+ (KHTML, like Gecko) Version/3.1.2 Mobile Safari/525.20.1',
                 'REMOTE_ADDR'           => '1.250.250.0',
                 'REQUEST_TIME'          => '06-12-2006 11:06'
-            )),
-        );
+            ]],
+        ];
     }
 
     /**
@@ -131,13 +131,13 @@ class BasicTest extends TestCase
      * @dataProvider headersProvider
      * @param $headers
      */
-    public function testInvalidHeader($headers)
+    public function testInvalidHeader(array $headers)
     {
         $md = new Mobile_Detect($headers);
-        $this->assertNull($md->getHttpHeader('garbage_is_Garbage'));
+        $this->assertEmpty($md->getHttpHeader('garbage_is_Garbage'));
     }
 
-    public function userAgentProvider()
+    public function userAgentProvider(): array
     {
         return array(
             array(array(
@@ -238,98 +238,65 @@ class BasicTest extends TestCase
     public function testSetLongUserAgent() {
         $md = new Mobile_Detect();
         $md->setUserAgent(str_repeat("a", 501));
-        $this->assertEquals(strlen($md->getUserAgent()), 500);
-    }
-
-    public function testSetDetectionType()
-    {
-        $md = new Mobile_Detect(array());
-
-        $md->setDetectionType('bskdfjhs');
-        $this->assertAttributeEquals(
-            Mobile_Detect::DETECTION_TYPE_MOBILE,
-            'detectionType',
-            $md
-        );
-
-        $md->setDetectionType();
-        $this->assertAttributeEquals(
-            Mobile_Detect::DETECTION_TYPE_MOBILE,
-            'detectionType',
-            $md
-        );
-
-        $md->setDetectionType(Mobile_Detect::DETECTION_TYPE_MOBILE);
-        $this->assertAttributeEquals(
-            Mobile_Detect::DETECTION_TYPE_MOBILE,
-            'detectionType',
-            $md
-        );
-
-        $md->setDetectionType(Mobile_Detect::DETECTION_TYPE_EXTENDED);
-        $this->assertAttributeEquals(
-            Mobile_Detect::DETECTION_TYPE_EXTENDED,
-            'detectionType',
-            $md
-        );
+        $this->assertEquals(500, strlen($md->getUserAgent()));
     }
 
     //special headers that give 'quick' indication that a device is mobile
-    public function quickHeadersData()
+    public function quickHeadersData(): array
     {
-        return array(
-            array(array(
+        return [
+            [[
                 'HTTP_ACCEPT' => 'application/json; q=0.2, application/x-obml2d; q=0.8, image/gif; q=0.99, */*'
-            )),
-            array(array(
+            ]],
+            [[
                 'HTTP_ACCEPT' => 'text/*; q=0.1, application/vnd.rim.html'
-            )),
-            array(array(
+            ]],
+            [[
                 'HTTP_ACCEPT' => 'text/vnd.wap.wml',
-            )),
-            array(array(
+            ]],
+            [[
                 'HTTP_ACCEPT' => 'application/vnd.wap.xhtml+xml',
-            )),
-            array(array(
+            ]],
+            [[
                 'HTTP_X_WAP_PROFILE' => 'hello',
-            )),
-            array(array(
+            ]],
+            [[
                 'HTTP_X_WAP_CLIENTID' => ''
-            )),
-            array(array(
+            ]],
+            [[
                 'HTTP_WAP_CONNECTION' => ''
-            )),
-            array(array(
+            ]],
+            [[
                 'HTTP_PROFILE' => ''
-            )),
-            array(array(
+            ]],
+            [[
                 'HTTP_X_OPERAMINI_PHONE_UA' => ''
-            )),
-            array(array(
+            ]],
+            [[
                 'HTTP_X_NOKIA_GATEWAY_ID' => ''
-            )),
-            array(array(
+            ]],
+            [[
                 'HTTP_X_ORANGE_ID' => ''
-            )),
-            array(array(
+            ]],
+            [[
                 'HTTP_X_VODAFONE_3GPDPCONTEXT' => ''
-            )),
-            array(array(
+            ]],
+            [[
                 'HTTP_X_HUAWEI_USERID' => ''
-            )),
-            array(array(
+            ]],
+            [[
                 'HTTP_UA_OS' => ''
-            )),
-            array(array(
+            ]],
+            [[
                 'HTTP_X_MOBILE_GATEWAY' => ''
-            )),
-            array(array(
+            ]],
+            [[
                 'HTTP_X_ATT_DEVICEID' => ''
-            )),
-            array(array(
+            ]],
+            [[
                 'HTTP_UA_CPU' => 'ARM'
-            ))
-        );
+            ]]
+        ];
     }
 
     /**
@@ -343,26 +310,26 @@ class BasicTest extends TestCase
     }
 
     // Headers that are not mobile.
-    public function quickNonMobileHeadersData()
+    public function quickNonMobileHeadersData(): array
     {
 
-        return array(
-            array(array(
+        return [
+            [[
                 'HTTP_UA_CPU' => 'AMD64'
-                )),
-            array(array(
+            ]],
+            [[
                 'HTTP_UA_CPU' => 'X86'
-                )),
-            array(array(
+            ]],
+            [[
                 'HTTP_ACCEPT' => 'text/javascript, application/javascript, application/ecmascript, application/x-ecmascript, */*; q=0.01'
-                )),
-            array(array(
+            ]],
+            [[
                 'HTTP_REQUEST_METHOD' => 'DELETE'
-                )),
-            array(array(
+            ]],
+            [[
                 'HTTP_VIA' => '1.1 ws-proxy.stuff.co.il C0A800FA'
-                )),
-        );
+            ]],
+        ];
 
     }
 
@@ -376,61 +343,63 @@ class BasicTest extends TestCase
         $this->assertFalse($md->checkHttpHeadersForMobile());
     }
 
-    /**
-     * @expectedException BadMethodCallException
-     */
     public function testBadMethodCall()
     {
-        $md = new Mobile_Detect(array());
+        $this->expectException(BadMethodCallException::class);
+        $md = new Mobile_Detect([]);
         $md->badmethodthatdoesntexistatall();
     }
 
-    public function versionDataProvider()
+    public function versionDataProvider(): array
     {
-        return array(
-            array(
+        return [
+            [
                 'Mozilla/5.0 (Linux; Android 4.0.4; ARCHOS 80G9 Build/IMM76D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166  Safari/535.19',
                 'Android',
                 '4.0.4',
                 4.04
-            ),
-            array(
+            ],
+            [
                 'Mozilla/5.0 (Linux; Android 4.0.4; ARCHOS 80G9 Build/IMM76D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166  Safari/535.19',
                 'Webkit',
                 '535.19',
                 535.19
-            ),
-            array(
+            ],
+            [
                 'Mozilla/5.0 (Linux; Android 4.0.4; ARCHOS 80G9 Build/IMM76D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166  Safari/535.19',
                 'Chrome',
                 '18.0.1025.166',
                 18.01025166
-            ),
-            array(
+            ],
+            [
                 'Mozilla/5.0 (BlackBerry; U; BlackBerry 9700; en-US) AppleWebKit/534.8  (KHTML, like Gecko) Version/6.0.0.448 Mobile Safari/534.8',
                 'BlackBerry',
                 '6.0.0.448',
                 6.00448
-            ),
-            array(
+            ],
+            [
                 'Mozilla/5.0 (BlackBerry; U; BlackBerry 9700; en-US) AppleWebKit/534.8  (KHTML, like Gecko) Version/6.0.0.448 Mobile Safari/534.8',
                 'Webkit',
                 '534.8',
                 534.8
-            ),
-            array(
+            ],
+            [
                 'Mozilla/5.0 (BlackBerry; U; BlackBerry 9800; en-GB) AppleWebKit/534.8+ (KHTML, like Gecko) Version/6.0.0.546 Mobile Safari/534.8+',
                 'BlackBerry',
                 '6.0.0.546',
                 6.00546
-            )
-        );
+            ]
+        ];
     }
 
     /**
      * @dataProvider versionDataProvider
+     * @param string $userAgent
+     * @param string $property
+     * @param $stringVersion
+     * @param $floatVersion
      */
-    public function testVersionExtraction($userAgent, $property, $stringVersion, $floatVersion)
+    public function testVersionExtraction(string $userAgent, string $property, $stringVersion, $floatVersion)
     {
         $md = new Mobile_Detect(array('HTTP_USER_AGENT' => $userAgent));
         $prop = $md->version($property);
@@ -448,27 +417,12 @@ class BasicTest extends TestCase
     public function testRules()
     {
         $md = new Mobile_Detect;
-        $count = array_sum(array(
+        $count = array_sum([
             count(Mobile_Detect::getPhoneDevices()),
             count(Mobile_Detect::getTabletDevices()),
             count(Mobile_Detect::getOperatingSystems()),
             count(Mobile_Detect::getBrowsers())
-        ));
-        $rules = $md->getRules();
-        $this->assertCount($count, $rules);
-    }
-
-    public function testRulesExtended()
-    {
-        $md = new Mobile_Detect;
-        $count = array_sum(array(
-            count(Mobile_Detect::getPhoneDevices()),
-            count(Mobile_Detect::getTabletDevices()),
-            count(Mobile_Detect::getOperatingSystems()),
-            count(Mobile_Detect::getBrowsers()),
-            count(Mobile_Detect::getUtilities())
-        ));
-        $md->setDetectionType(Mobile_Detect::DETECTION_TYPE_EXTENDED);
+        ]);
         $rules = $md->getRules();
         $this->assertCount($count, $rules);
     }
@@ -482,7 +436,7 @@ class BasicTest extends TestCase
                 . ' does not match X.Y.Z pattern');
     }
 
-    public function crazyVersionNumbers()
+    public function crazyVersionNumbers(): array
     {
         return array(
             array('2.5.6', 2.56),
