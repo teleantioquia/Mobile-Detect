@@ -19,6 +19,9 @@
     "require-dev": {
         "phpunit/phpunit": "~4.8.35||~5.7"
     },
+    "scripts": {
+        "test": "phpunit -v -c tests/phpunit.xml --coverage-text --strict-coverage --stop-on-risky"
+    },
     "autoload": {
         "classmap": ["Mobile_Detect.php"],
         "psr-0": {

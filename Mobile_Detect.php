@@ -1358,7 +1358,6 @@ class Mobile_Detect
      */
     public function isMobile($userAgent = null, $httpHeaders = null)
     {
-
         if ($httpHeaders) {
             $this->setHttpHeaders($httpHeaders);
         }
@@ -1457,7 +1456,19 @@ class Mobile_Detect
      */
     public function match($regex, $userAgent = null)
     {
-        $match = (bool) preg_match(sprintf('#%s#is', $regex), (false === empty($userAgent) ? $userAgent : $this->userAgent), $matches);
+
+        echo sprintf('#%s#is', $regex) . PHP_EOL . PHP_EOL;
+        echo (false === empty($userAgent) ? $userAgent : $this->userAgent) . PHP_EOL . PHP_EOL;
+        
+        $match = (bool) preg_match(
+            sprintf('#%s#is', $regex),
+            // sprintf('%s', $regex),
+            (false === empty($userAgent) ? $userAgent : $this->userAgent),
+            $matches
+        );
+
+        echo var_dump( $matches ) . PHP_EOL . PHP_EOL;
+
         // If positive match is found, store the results for debug.
         if ($match) {
             $this->matchingRegex = $regex;
