@@ -1,5 +1,5 @@
 {
-    "hash": "fcc89ff1a5b30ef2d2850e9c0a3b03a4bc1d1c87",
+    "hash": "e01bac58181e6b673cd829de2dad7bd79137fd9b",
     "user_agents": [
         {
             "vendor": "Acer",
@@ -1559,6 +1559,18 @@
             "user_agent": "Mozilla\/5.0 (Linux; Android 8.1.0; Pixel 2 Build\/OPM2.171026.006.G1) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/67.0.3396.87 Mobile Safari\/537.36",
             "mobile": true,
             "tablet": false
+        },
+        {
+            "vendor": "Google",
+            "user_agent": "Mozilla\/5.0 (Linux; Android 11; sdk_gphone_x86_arm) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/83.0.4103.106 Mobile Safari\/537.36",
+            "mobile": true,
+            "tablet": false
+        },
+        {
+            "vendor": "Google",
+            "user_agent": "Mozilla\/5.0 (Linux; Android 11; sdk_gphone_x86_arm) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/83.0.4103.106 Safari\/537.36",
+            "mobile": true,
+            "tablet": true
         },
         {
             "vendor": "HP",

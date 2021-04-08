@@ -400,6 +400,8 @@ class Mobile_Detect
         'OnePlus'       => 'ONEPLUS',
         // @Tapatalk is a mobile app; http://support.tapatalk.com/threads/smf-2-0-2-os-and-browser-detection-plugin-and-tapatalk.15565/#post-79039
         'GenericPhone'  => 'Tapatalk|PDA;|SAGEM|\bmmp\b|pocket|\bpsp\b|symbian|Smartphone|smartfon|treo|up.browser|up.link|vodafone|\bwap\b|nokia|Series40|Series60|S60|SonyEricsson|N900|MAUI.*WAP.*Browser',
+        // Android Emulators.
+        'AndroidEmulatorPhone-x86_arm' => '(\bandroid\b.*\bsdk_gphone_x86_arm\b)(?=.*mobile)',
     );
 
     /**
@@ -487,9 +489,9 @@ class Mobile_Detect
         // @todo Research the Windows Tablets.
         'MSITablet' => 'MSI \b(Primo 73K|Primo 73L|Primo 81L|Primo 77|Primo 93|Primo 75|Primo 76|Primo 73|Primo 81|Primo 91|Primo 90|Enjoy 71|Enjoy 7|Enjoy 10)\b',
         // @todo http://www.kyoceramobile.com/support/drivers/
-    //    'KyoceraTablet' => null,
+        //    'KyoceraTablet' => null,
         // @todo http://intexuae.com/index.php/category/mobile-devices/tablets-products/
-    //    'IntextTablet' => null,
+        //    'IntextTablet' => null,
         // http://pdadb.net/index.php?m=pdalist&list=SMiT (NoName Chinese Tablets)
         // http://www.imp3.net/14/show.php?itemid=20454
         'SMiTTablet'        => 'Android.*(\bMID\b|MID-560|MTV-T1200|MTV-PND531|MTV-P1101|MTV-PND530)',
@@ -667,7 +669,9 @@ class Mobile_Detect
         'Hudl'              => 'Hudl HT7S3|Hudl 2',
         // http://www.telstra.com.au/home-phone/thub-2/
         'TelstraTablet'     => 'T-Hub2',
-        'GenericTablet'     => 'Android.*\b97D\b|Tablet(?!.*PC)|BNTV250A|MID-WCDMA|LogicPD Zoom2|\bA7EB\b|CatNova8|A1_07|CT704|CT1002|\bM721\b|rk30sdk|\bEVOTAB\b|M758A|ET904|ALUMIUM10|Smartfren Tab|Endeavour 1010|Tablet-PC-4|Tagi Tab|\bM6pro\b|CT1020W|arc 10HD|\bTP750\b|\bQTAQZ3\b|WVT101|TM1088|KT107'
+        'GenericTablet'     => 'Android.*\b97D\b|Tablet(?!.*PC)|BNTV250A|MID-WCDMA|LogicPD Zoom2|\bA7EB\b|CatNova8|A1_07|CT704|CT1002|\bM721\b|rk30sdk|\bEVOTAB\b|M758A|ET904|ALUMIUM10|Smartfren Tab|Endeavour 1010|Tablet-PC-4|Tagi Tab|\bM6pro\b|CT1020W|arc 10HD|\bTP750\b|\bQTAQZ3\b|WVT101|TM1088|KT107',
+        // Android Emulators.
+        'AndroidEmulatorTablet-x86_arm' => '(\bAndroid\b.*\bsdk_gphone_x86_arm\b)(?!.*mobile)',
     );
 
     /**
@@ -1456,23 +1460,30 @@ class Mobile_Detect
      */
     public function match($regex, $userAgent = null)
     {
+        // What is the # and #is, in this case is working as the pattern delimiter,
+        // php have some weird stuff with this, here an explanation.
+        // https://stackoverflow.com/a/22816067/4086981
+        // Author is not using the default / (slash) delimiter since there may be
+        // urls on the regex.
 
-        echo sprintf('#%s#is', $regex) . PHP_EOL . PHP_EOL;
-        echo (false === empty($userAgent) ? $userAgent : $this->userAgent) . PHP_EOL . PHP_EOL;
-        
+        // Then, the 'is' after the # at the end, are pattern modifiers.
+        // https://www.php.net/manual/en/reference.pcre.pattern.modifiers.php
+        // i: If this modifier is set, letters in the pattern match both upper and lower case letters.
+        // s: If this modifier is set, a dot metacharacter in the pattern matches all characters, including newlines. Without it, newlines are excluded. This modifier is equivalent to Perl's /s modifier. A negative class such as [^a] always matches a newline character, independent of the setting of this modifier.
         $match = (bool) preg_match(
             sprintf('#%s#is', $regex),
-            // sprintf('%s', $regex),
             (false === empty($userAgent) ? $userAgent : $this->userAgent),
             $matches
         );
-
-        echo var_dump( $matches ) . PHP_EOL . PHP_EOL;
 
         // If positive match is found, store the results for debug.
         if ($match) {
             $this->matchingRegex = $regex;
             $this->matchesArray = $matches;
+
+            // echo '$regex: ' . $regex . PHP_EOL;
+            // echo '$matches: ' . PHP_EOL;
+            // echo print_r( $matches ) . PHP_EOL;
         }
 
         return $match;

@@ -19,5 +19,11 @@ return array(
         'Mozilla/5.0 (Linux; Android 8.1.0; Pixel C Build/OPM1.171019.011; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/65.0.3325.109 Safari/537.36'                        => array('isMobile' => true, 'isTablet' => true),
         'Mozilla/5.0 (Linux; Android 8.1.0; Pixel C Build/OPM1.171019.026) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.126 Safari/537.36'                                        => array('isMobile' => true, 'isTablet' => true),
         'Mozilla/5.0 (Linux; Android 8.1.0; Pixel 2 Build/OPM2.171026.006.G1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Mobile Safari/537.36'                               => array('isMobile' => true, 'isTablet' => false),
-        ),
+
+        // Emulators.
+        // Mobile
+        'Mozilla/5.0 (Linux; Android 11; sdk_gphone_x86_arm) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Mobile Safari/537.36'                                               => array('isMobile' => true, 'isTablet' => false),
+        // Tablet
+        'Mozilla/5.0 (Linux; Android 11; sdk_gphone_x86_arm) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Safari/537.36'                                                      => array('isMobile' => true, 'isTablet' => true),
+    ),
 );
